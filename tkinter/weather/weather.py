@@ -1,4 +1,5 @@
 from tkinter import *
+import requests
 
 # Define window
 root=Tk()
@@ -17,6 +18,23 @@ large_font = ('SimSun', 14)
 small_font = ('SimSun', 10)
 
 # define functions
+def search():
+    """Use open weather api to look up current weather conditions given a city, country"""
+    global response
+
+    # get API repsonse
+    url = 'https://https://api.openweathermap.org/data/2.5/weather'
+    api_key = 'dda71caf405d01b0091c6ff97588f0b0'
+
+    # search by the appropriate query, either city name ot zip
+    if search_method.get() == 1:
+        querystring = {'q':city_entry.get(), 'appid':api_key}
+    elif search_method.get() == 2:
+        querystring = {'zip':city_entry.get(), 'appid':api_key}
+
+    # call API
+    response = requests.request("GET", url, params=querystring)
+    print(response)
 
 # define layout
 # create frames
@@ -53,7 +71,7 @@ photo_lbl.pack(pady=8)
 # input frame laout
 #create  input frame bts and entry
 city_entry = Entry(input_frame, width=20, font=large_font)
-submit_btn = Button(input_frame, text="Submit", font=large_font, bg=input_color)
+submit_btn = Button(input_frame, text="Submit", font=large_font, bg=input_color, command=search)
 
 search_method = IntVar()
 search_method.set(1)
