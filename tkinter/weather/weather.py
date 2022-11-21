@@ -23,7 +23,7 @@ def search():
     global response
 
     # get API repsonse
-    url = 'https://https://api.openweathermap.org/data/2.5/weather'
+    url = 'https://api.openweathermap.org/data/2.5/weather?'
     api_key = 'dda71caf405d01b0091c6ff97588f0b0'
 
     # search by the appropriate query, either city name ot zip
@@ -34,7 +34,45 @@ def search():
 
     # call API
     response = requests.request("GET", url, params=querystring)
+    response = response.json()
     print(response)
+
+    # example response return
+    '''{'coord': {'lon': -71.0598, 'lat': 42.3584}, 'weather': 
+    [{'id': 802, 'main': 'Clouds', 'description': 'scattered clouds', 'icon': '03n'}], 
+    'base': 'stations', 'main': {'temp': 275.22, 'feels_like': 269.43, 'temp_min': 273.76, 'temp_max': 276.36,
+    'pressure': 1023, 'humidity': 54}, 'visibility': 10000, 'wind': {'speed': 8.23, 'deg': 210},
+    'clouds': {'all': 40}, 'dt': 1669067304, 'sys': {'type': 2, 'id': 2013408, 'country': 'US',
+    'sunrise': 1669030951, 'sunset': 1669065484}, 'timezone': -18000, 'id': 4930956, 
+    'name': 'Boston', 'cod': 200}'''
+
+    get_weather()
+
+
+
+def get_weather():
+    """GRab info from API response and update out weather lables."""
+    city_name = response['name']
+    city_lat = str(response['coord']['lat'])
+    city_lon = str(response['coord']['lon'])
+
+    main_weather = response['weather'][0]['main']
+    description = response['weather'][0]['description']
+    temp = str(response['main']['temp'])
+    feels_like = str(response['main']['feels_like'])
+    temp_min = str(response['main']['temp_min'])
+    temp_max = str(response['main']['temp_max'])
+    humidity = str(response['main']['humidity'])
+
+    # Update labels
+    city_info_lbl.config(text=f'{city_name} ( {city_lat}, {city_lon} ', font=large_font, bg=output_color )
+    weather_lbl.config(text="Weather: " + main_weather + ", " + description, font=small_font, bg=output_color)
+    temp_lbl.config(text=f"Temperature: {temp} F", font=small_font, bg=output_color)
+    feels_lbl.config(text=f"Feels like: {feels_like} F", font=small_font, bg=output_color)
+    temp_min_lbl.config(text=f"Min temp: {temp_min} F", font=small_font, bg=output_color)
+    temp_max_lbl.config(text=f"Max temp: {temp_max} F", font=small_font, bg=output_color)
+    humidity_lbl.config(text=f"Humidity: {humidity}", font=small_font, bg=output_color)
+
 
 # define layout
 # create frames
@@ -50,7 +88,7 @@ output_frame.pack_propagate(0)
 input_frame.pack(pady=15)
 
 # Output frame layout
-city_info_lbl = Label(output_frame, bg=output_color, text="Testing")
+city_info_lbl = Label(output_frame, bg=output_color, text="Testing city")
 weather_lbl = Label(output_frame, bg=output_color, text="Testing weather")
 temp_lbl = Label(output_frame, bg=output_color, text="Testing temp")
 feels_lbl = Label(output_frame, bg=output_color, text="Testing feels")
