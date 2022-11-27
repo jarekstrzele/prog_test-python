@@ -1,28 +1,123 @@
-def add_node(V, node):
 
+
+# Graph - Romeo, Julia, Paris, Laurenty
+V={
+    "J":["R","P","L"],
+    "R":["J","P", "L"],
+    "L":["J","R"],
+    "P":["J","R"],
+}
+
+def graph_degree(V):
+    return max([node_degree(V, n) for n in V.keys()  ])
+
+def node_degree(V, node):
     if node in V.keys():
-        return
+        return len(V[node])
     else:
-        V[node] = []
+        return -1
 
-def add_edge(V, source, dest):
-    if not source in V.keys() or not dest in V.keys():
-        return
-    else:
-        if not dest in V[source]:
-            V[source].append(dest)
-V={}
-add_node(V, "ZP" )
-add_node(V, "PE" )
-add_node(V, "ZE" )
-add_node(V, "Zprez" )
-add_node(V, "RW" )
-add_edge(V, 'ZP', 'PE')
-add_edge(V, 'ZP', 'RW')
-add_edge(V, 'RW', 'ZP')
-add_edge(V, 'RW', 'ZPrez')
-add_edge(V, 'PE', 'ZE')
-print(V)
+for n in V.keys():
+    print(f'Degree of {n}: {node_degree(V, n)}')
+
+print(f'graph degree {graph_degree(V)}')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# { 
+# 	Smartphone: { Web Browser: 30, Book: 22 } ,
+# 	Web Browser: {Book: 32, MP3: 25},
+# 	MP3: {Book: 44},
+# 	Book:[]
+# }
+
+# V={}
+
+# def add_node(V, node):
+
+#     if node in V.keys():
+#         return
+#     else:
+#         V[node] = {}
+
+# def add_edge(V, source, dest, weight):
+#     if not source in V.keys() or not dest in V.keys():
+#         return
+#     else:
+#         if not dest in V[source].keys():
+#             V[source][dest]  = weight
+# V={}
+# add_node(V, "Smartphone" )
+# add_node(V, "Web Browser" )
+# add_node(V, "Book" )
+# add_node(V, "MP3" )
+
+# add_edge(V, 'Smartphone', 'Web Browser', 30)
+# add_edge(V, 'Smartphone', 'Book', 22)
+# add_edge(V, 'Web Browser', 'Book', 32)
+# add_edge(V, 'Web Browser', 'MP3', 25)
+# add_edge(V, 'MP3', 'Book', 44)
+
+
+
+# print(V)
+# print(f'Koszt czasu Web Browser->Book {V["Web Browser"]["Book"]}')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def add_node(V, node):
+
+#     if node in V.keys():
+#         return
+#     else:
+#         V[node] = []
+
+# def add_edge(V, source, dest):
+#     if not source in V.keys() or not dest in V.keys():
+#         return
+#     else:
+#         if not dest in V[source]:
+#             V[source].append(dest)
+# V={}
+# add_node(V, "ZP" )
+# add_node(V, "PE" )
+# add_node(V, "ZE" )
+# add_node(V, "Zprez" )
+# add_node(V, "RW" )
+
+# add_edge(V, 'RW', 'Zprez')
+# add_edge(V, 'RW', 'ZP')
+
+
+# add_edge(V, 'ZP', 'PE')
+# add_edge(V, 'ZP', 'RW')
+
+# add_edge(V, 'PE', 'ZE')
+# print(V)
 
 # V = ["a", "b", "c", "d", "f"]
 # E=[ (0,2), (1,2), (2,3), (2,4)]
