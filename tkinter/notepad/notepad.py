@@ -22,6 +22,12 @@ class App(tkinter.Tk):
         self.menu = Menu(self)
         self.menu.pack(padx=5, pady=5)
         self.menu.close.config(command=self.test)
+        self.notes=Notes(self)
+        # self.notes.config(font=self.menu.fonts_types.chosen_font.get())
+        self.notes.config(font=self.menu.fonts_types.get())
+        
+        self.notes.pack()
+
         
     def test(self):
         print("destrou")
@@ -66,9 +72,17 @@ class TypeFontChooser(tkinter.OptionMenu):
     def __init__(self, master, row=0, column=0, padx=5, pady=5):
         self.chosen_font=StringVar()
         self.chosen_font.set('Terminal')
-        super().__init__(master, self.chosen_font, *TypeFontChooser.families )
+        self.set = self.chosen_font.set
+        self.get = self.chosen_font.get
+        super().__init__(master, self.chosen_font, *TypeFontChooser.families)
         self.config(width=16)
         self.grid(row=row, column=column, padx=padx, pady=pady)
+    
+    def change_font(self, event):
+        def func(event):
+            print('hello') 
+
+        self.config(command=func)
 
 class SizeFontChooser(tkinter.OptionMenu):
     size=[8,10,12,14,16,20,24,32,48,64,72,96]
@@ -93,6 +107,7 @@ class Notes(tkinter.scrolledtext.ScrolledText):
     text_color = "#fffacd"
     
     def __init__(self, master):
+        super().__init__(master, bg=Notes.text_color, width=400, height=200)
 
         
        
