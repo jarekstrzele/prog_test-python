@@ -1,5 +1,12 @@
 import tkinter
-from tkinter import StringVar, IntVar, scrolledtext
+from tkinter import StringVar, IntVar, scrolledtext,END, messagebox, filedialog
+
+
+
+# txt
+# first line font family
+# second one -> size
+# third one -> option
 
 
 class App(tkinter.Tk):
@@ -55,32 +62,81 @@ class Menu(tkinter.Frame):
         # self.close_btn = tkinter.Button(self, image=self.close_img)
         # self.close_btn.grid(row=0, column=3, padx=5, pady=5)
 
-        self.new=MenuWidgets(self, 'images/new.png')
+        self.new=MenuWidgets(self, 'images/new.png', column=0)
+        self.new.btn.config(command=self.clear_note)
         self.open=MenuWidgets(self, 'images/open.png', column=1)
+        self.open.btn.config(command=self.open_note)
         self.save=MenuWidgets(self, 'images/save.png', column=2)
+        self.save.btn.config(command=self.save_note)
         self.close=MenuWidgets(self, 'images/close.png', column=3)
-        self.close.btn.config(command=quit)
+        self.close.btn.config(command=self.close_note)
         
         self.chosen_font=StringVar()
         self.chosen_font.set('Robot')
         self.font_types=tkinter.OptionMenu(self, self.chosen_font, *Menu.families, command=self.change_font)
+        self.font_types.config(width=16)
         self.font_types.grid(row=0, column=4)
         
         self.chosen_size=IntVar()
         self.chosen_size.set(32)
         self.size_types=tkinter.OptionMenu(self, self.chosen_size, *Menu.sizes,  command=self.change_font)
+        self.size_types.config(width=6)
         self.size_types.grid(row=0, column=5)
 
         self.chosen_format=StringVar()
         self.chosen_format.set('normal')
         self.format_types=tkinter.OptionMenu(self, self.chosen_format, *Menu.formats, command=self.change_font)
+        self.format_types.config(width=8)
         self.format_types.grid(row=0, column=6)
 
+    def clear_note(self):
+        question = messagebox.askyesno("New note", "Are you sure you want to start a new note?")
+        if question==1:
+            self.notebook.delete("1.0", END)
+        
+    def close_note(self):
+        question = messagebox.askyesno("Close note", "Are you sure you want to close your notes?")
+        if question:
+            self.quit()
 
     def change_font(self,event):
         self.notebook.config(font=(self.chosen_font.get(),
                                    self.chosen_size.get(), 
                                    self.chosen_format.get()))
+
+    def save_note(self):
+        """
+            Save the given note. 
+            First three lines are saved as font family, font size, font option
+        """
+       
+        save_name = filedialog.asksaveasfilename(initialdir='./', title="Save Note", 
+                                                 filetypes=(("Text Files", "*.txt"), ("All files", "*.*"))
+        )
+        
+        with open(save_name, "w") as f:
+            f.write(self.chosen_font.get() + "\n")
+            f.write(str(self.chosen_size.get()) + "\n")
+            f.write(self.chosen_format.get() + "\n")
+            # remaining text will be wroten
+            f.write(self.notebook.get("1.0", END))
+
+    def open_note(self):
+        open_name =filedialog.askopenfilename(initialdir='./', title="Open file",
+                                              filetypes=(("Text Files", "*.txt"), ("All files", "*.*"))
+            )
+        with open(open_name, 'r') as f:
+            self.notebook.delete("1.0", END)
+            self.chosen_font.set(f.readline().strip())
+            self.chosen_size.set(int(f.readline().strip()))
+            self.chosen_format.set(f.readline().strip())
+
+            self.change_font(1)
+
+            text=f.read()
+            self.notebook.insert("1.0", text)
+
+
 
 class MenuWidgets(tkinter.Button):
 
